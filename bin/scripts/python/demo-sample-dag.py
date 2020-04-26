@@ -3,6 +3,9 @@ from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from airflow.utils.dates import days_ago
 
+# The mail DAG file
+# Author: Viswa Mohanty
+
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
