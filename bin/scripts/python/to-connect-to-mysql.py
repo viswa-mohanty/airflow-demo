@@ -2,6 +2,8 @@
 
 import pymysql
 
+# This python script is used to connect to the mysql instance
+
 # Open database connection
 db = pymysql.connect("172.17.0.3","root","Testing","mysql" )
 

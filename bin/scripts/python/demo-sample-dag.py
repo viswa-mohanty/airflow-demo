@@ -27,7 +27,7 @@ dag = DAG(
 # t1, t2 and t3 are examples of tasks created by instantiating operators
 s1 = BashOperator(
     task_id='start_jobs',
-    bash_command='python /usr/local/airflow/dags/test.py',
+    bash_command='echo "Starting the job"',
     dag=dag,
 )
 
