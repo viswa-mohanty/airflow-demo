@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  a-mysql:
+    image: 'mysql'
+
+  airflow:
+    build: '.'
+    depends_on:
+      - 'a-mysql'
+    env_file:
+      - '.env'
+    ports:
+      - '8080:8080'
