@@ -3,7 +3,7 @@ from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from airflow.utils.dates import days_ago
 
-# The main DAG file
+# The main DAG file for the demo
 # Author: Viswa Mohanty
 # April 2020
 
@@ -248,6 +248,20 @@ mail_all_archive = BashOperator(
     dag=dag,
 )
 
+mail_batch_completion = BashOperator(
+    task_id='mail_batch_completion',
+    depends_on_past=False,
+    bash_command='echo "Put command for mailing archive completion"',
+    params={'my_param': 'Parameter I passed in'},
+    dag=dag,
+)
+
+e1 = BashOperator(
+    task_id='batch_end',
+    bash_command='echo "Ending the Batch"',
+    dag=dag,
+)
+
 
 s1 >> [fw1, fw2, fw3, fw4]
 fw5 << [s1, fw1, fw2, fw3, fw4]
@@ -261,3 +275,4 @@ Agg1 << [transform2, transform3]
 Agg1 >> mail_agg
 archive_all << [prep_archve1, prep_archve2, prep_archve3]
 archive_all >> mail_all_archive
+e1 << mail_batch_completion << [mail_all_archive, mail_load1, mail_load2, mail_load3, mail_agg]
