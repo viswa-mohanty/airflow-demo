@@ -1,14 +1,9 @@
 version: '3'
 
 services:
-  a-mysql:
-    image: 'mysql'
-
   airflow:
     build: '.'
     image: 'viswamohanty/airflow-demo'
-    depends_on:
-      - 'a-mysql'
     env_file:
       - '.env'
     ports:
