@@ -6,6 +6,7 @@ services:
 
   airflow:
     build: '.'
+    image: 'viswamohanty/airflow-demo'
     depends_on:
       - 'a-mysql'
     env_file:
