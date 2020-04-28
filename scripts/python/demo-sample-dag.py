@@ -5,7 +5,9 @@ from airflow.utils.dates import days_ago
 
 # The main DAG file
 # Author: Viswa Mohanty
+# April 2020
 
+# Default Arguments to be used in the DAG
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
@@ -24,7 +26,14 @@ dag = DAG(
     schedule_interval=timedelta(days=1),
 )
 
-# t1, t2 and t3 are examples of tasks created by instantiating operators
+# A complete list of the tasks.
+# At the moment, all the tasks uses bash_commands.
+# Also all the tasks are using simple commands like tail -f for a file or sleep.
+# The idea is to demonstrate the interactions between tasks
+# And teh focus is not so much on the actual tasks that are performed.
+# If needed, we can create simple python scripts to do various tasks in a typical pipeline
+# such as load_staging, load_core etc.
+
 s1 = BashOperator(
     task_id='start_jobs',
     bash_command='echo "Starting the job"',
@@ -55,6 +64,22 @@ fw3 = BashOperator(
     dag=dag,
 )
 
+fw4 = BashOperator(
+    task_id='Source_4_file_watcher',
+    depends_on_past=False,
+    bash_command='while [ ! -f /tmp/sleep.txt ]; do sleep 5; done',
+    retries=3,
+    dag=dag,
+)
+
+fw5 = BashOperator(
+    task_id='Source_5_file_watcher',
+    depends_on_past=False,
+    bash_command='while [ ! -f /tmp/sleep.txt ]; do sleep 5; done',
+    retries=3,
+    dag=dag,
+)
+
 quality1 = BashOperator(
     task_id='quality_checks_on_source_1_file',
     depends_on_past=False,
@@ -72,6 +97,22 @@ quality2 = BashOperator(
 )
 
 quality3 = BashOperator(
+    task_id='quality_checks_on_source_3_file',
+    depends_on_past=False,
+    bash_command='echo "Put command for quality checks for source 3 file"',
+    params={'my_param': 'Parameter I passed in'},
+    dag=dag,
+)
+
+quality4 = BashOperator(
+    task_id='quality_checks_on_source_2_file',
+    depends_on_past=False,
+    bash_command='echo "Put command for quality checks for source 2 file"',
+    params={'my_param': 'Parameter I passed in'},
+    dag=dag,
+)
+
+quality5 = BashOperator(
     task_id='quality_checks_on_source_3_file',
     depends_on_past=False,
     bash_command='echo "Put command for quality checks for source 3 file"',
@@ -208,7 +249,8 @@ mail_all_archive = BashOperator(
 )
 
 
-s1 >> [fw1, fw2, fw3]
+s1 >> [fw1, fw2, fw3, fw4]
+fw5 << [s1, fw1, fw2, fw3, fw4]
 quality1 >> stage1 >> transform1 >> mail_load1
 quality2 >> stage2 >> transform2 >> mail_load2
 quality3 >> stage3 >> transform3 >> mail_load3
