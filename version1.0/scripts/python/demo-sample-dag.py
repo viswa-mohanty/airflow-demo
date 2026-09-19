@@ -12,7 +12,7 @@ default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
     'start_date': days_ago(2),
-    'email': ['viswa.mohanty@brillio.com'],
+    'email': ['your-email@example.com'],
     'email_on_failure': False,
     'email_on_retry': False,
     'retries': 1,
@@ -97,22 +97,6 @@ quality2 = BashOperator(
 )
 
 quality3 = BashOperator(
-    task_id='quality_checks_on_source_3_file',
-    depends_on_past=False,
-    bash_command='echo "Put command for quality checks for source 3 file"',
-    params={'my_param': 'Parameter I passed in'},
-    dag=dag,
-)
-
-quality4 = BashOperator(
-    task_id='quality_checks_on_source_2_file',
-    depends_on_past=False,
-    bash_command='echo "Put command for quality checks for source 2 file"',
-    params={'my_param': 'Parameter I passed in'},
-    dag=dag,
-)
-
-quality5 = BashOperator(
     task_id='quality_checks_on_source_3_file',
     depends_on_past=False,
     bash_command='echo "Put command for quality checks for source 3 file"',
